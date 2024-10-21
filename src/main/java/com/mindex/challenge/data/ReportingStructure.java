@@ -12,7 +12,7 @@ public class ReportingStructure {
         this.numberOfReports = numberOfReports;
     }
 
-    public void getEmployee() {
+    public Employee getEmployee() {
         return employee;
     }
 
@@ -24,7 +24,7 @@ public class ReportingStructure {
         return numberOfReports;
     }
 
-    public Integer setNumberOfReports(int numberOfReports) {
+    public void setNumberOfReports(int numberOfReports) {
         this.numberOfReports = numberOfReports;
     }
 }
