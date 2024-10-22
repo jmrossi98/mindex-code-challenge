@@ -24,13 +24,13 @@ public class ReportingStructureServiceImpl implements ReportingStructureService 
     }
 
     public int calculateReports(Employee employee) {
-        if (employee.getDirectReports() == null)
+        if (employee.getDirectReports() == null || employee.getDirectReports().isEmpty()) {
             return 0;
+        }
 
-        int totalReports = employee.getDirectReports().size();
-        for (Employee report : employee.getDirectReports()){
-            Employee directReport = employeeRepository.findByEmployeeId(report.getEmployeeId());
-            totalReports += calculateReports(directReport);
+        int totalReports = 0;
+        for (Employee report : employee.getDirectReports()) {
+            totalReports += 1 + calculateReports(report);
         }
         return totalReports;
     }
