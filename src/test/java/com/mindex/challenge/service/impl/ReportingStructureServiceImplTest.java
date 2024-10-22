@@ -31,9 +31,6 @@ public class ReportingStructureServiceImplTest {
     @Autowired
     private TestRestTemplate restTemplate;
 
-    @Autowired
-    private ReportingStructureService reportingStructureService;
-
     @Before
     public void setup() {
         employeeUrl = "http://localhost:" + port + "/employee";
