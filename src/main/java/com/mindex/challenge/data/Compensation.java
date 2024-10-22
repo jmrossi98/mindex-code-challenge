@@ -1,6 +1,6 @@
 package com.mindex.challenge.data;
 
-import java.util.List;
+import java.time.LocalDate;
 
 public class Compensation {
     private String employeeId;
