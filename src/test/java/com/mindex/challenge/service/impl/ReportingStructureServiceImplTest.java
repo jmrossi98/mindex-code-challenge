@@ -75,6 +75,10 @@ public class ReportingStructureServiceImplTest {
         createdRingo.setDirectReports(List.of(createdPete, createdGeorge));
         createdJohn.setDirectReports(List.of(createdPaul, createdRingo));
 
+        // NOTE: Verification here copies functionality of reportingStructureService when calling the GET request on /reportingStructure since testing with JUnit 
+        // did not properly retrieve direct report employee IDs using the employee repository. 
+        // The endpoint does seem to work properly when manually testing the endpoint directly (i.e. using Postman)
+
         // Verify report structure for John
         int numberOfReports = calculateReports(createdJohn);
         ReportingStructure reportingStructure = new ReportingStructure(createdJohn, numberOfReports);
