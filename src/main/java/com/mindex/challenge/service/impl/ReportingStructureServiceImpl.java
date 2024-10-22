@@ -29,6 +29,7 @@ public class ReportingStructureServiceImpl implements ReportingStructureService 
             return 0;
         }
 
+        // Recursively traverse hierarchy structure to get total direct report count
         int totalReports = employee.getDirectReports().size();
         for (Employee report : employee.getDirectReports()){
             Employee directReport = employeeRepository.findByEmployeeId(report.getEmployeeId());

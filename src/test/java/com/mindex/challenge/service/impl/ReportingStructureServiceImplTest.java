@@ -78,7 +78,7 @@ public class ReportingStructureServiceImplTest {
         createdRingo.setDirectReports(List.of(createdPete, createdGeorge));
         createdJohn.setDirectReports(List.of(createdPaul, createdRingo));
 
-        // Verify report structure
+        // Verify report structure for John
         int numberOfReports = calculateReports(createdJohn);
         ReportingStructure reportingStructure = new ReportingStructure(createdJohn, numberOfReports);
         assertNotNull(reportingStructure);
@@ -86,6 +86,7 @@ public class ReportingStructureServiceImplTest {
         assertEquals(createdJohn.getEmployeeId(), reportingStructure.getEmployee().getEmployeeId());
         assertEquals(4, reportingStructure.getNumberOfReports());
 
+        // Verify report structure for Ringo
         numberOfReports = calculateReports(createdRingo);
         reportingStructure = new ReportingStructure(createdRingo, numberOfReports);
         assertNotNull(reportingStructure);
@@ -99,6 +100,7 @@ public class ReportingStructureServiceImplTest {
             return 0;
         }
 
+        // Recursively traverse hierarchy structure to get total direct report count
         int totalReports = employee.getDirectReports().size();
         for (Employee report : employee.getDirectReports()){
             Employee directReport = restTemplate.getForEntity(employeeIdUrl, Employee.class, report.getEmployeeId()).getBody();
