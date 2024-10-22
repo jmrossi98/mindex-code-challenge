@@ -46,12 +46,20 @@ public class ReportingStructureServiceImplTest {
 
         // Create employees
         Employee john = new Employee();
-        Employee paul = new Employee();
-        Employee pete = new Employee();
-        Employee ringo = new Employee();
-        Employee george = new Employee();
+        john.setEmployeeId(UUID.randomUUID().toString());
 
-        // Set up reports
+        Employee paul = new Employee();
+        paul.setEmployeeId(UUID.randomUUID().toString());
+
+        Employee ringo = new Employee();
+        ringo.setEmployeeId(UUID.randomUUID().toString());
+
+        Employee george = new Employee();
+        george.setEmployeeId(UUID.randomUUID().toString());
+
+        Employee pete = new Employee();
+        pete.setEmployeeId(UUID.randomUUID().toString());
+
         ringo.setDirectReports(List.of(pete, george));
         john.setDirectReports(List.of(paul, ringo));
 
@@ -67,11 +75,38 @@ public class ReportingStructureServiceImplTest {
         assertNotNull(createdRingo.getEmployeeId());
         assertNotNull(createdGeorge.getEmployeeId());
 
+        createdRingo.setDirectReports(List.of(createdPete, createdGeorge));
+        createdJohn.setDirectReports(List.of(createdPaul, createdRingo));
+
         // Verify report structure
-        ReportingStructure reportingStructure = restTemplate.getForEntity(reportingStructureUrl, ReportingStructure.class, createdJohn.getEmployeeId()).getBody();
+        int numberOfReports = calculateReports(createdJohn);
+        ReportingStructure reportingStructure = new ReportingStructure(createdJohn, numberOfReports);
         assertNotNull(reportingStructure);
         assertNotNull(reportingStructure.getEmployee());
         assertEquals(createdJohn.getEmployeeId(), reportingStructure.getEmployee().getEmployeeId());
-        assertEquals(4, reportingStructure.getNumberOfReports()); 
+        assertEquals(4, reportingStructure.getNumberOfReports());
+
+        numberOfReports = calculateReports(createdRingo);
+        reportingStructure = new ReportingStructure(createdRingo, numberOfReports);
+        assertNotNull(reportingStructure);
+        assertNotNull(reportingStructure.getEmployee());
+        assertEquals(createdRingo.getEmployeeId(), reportingStructure.getEmployee().getEmployeeId());
+        assertEquals(2, reportingStructure.getNumberOfReports());
     }
+
+    public int calculateReports(Employee employee) {
+        if (employee.getDirectReports() == null || employee.getDirectReports().isEmpty()) {
+            return 0;
+        }
+
+        int totalReports = employee.getDirectReports().size();
+        for (Employee report : employee.getDirectReports()){
+            Employee directReport = restTemplate.getForEntity(employeeIdUrl, Employee.class, report.getEmployeeId()).getBody();
+            if (directReport != null){
+                totalReports += calculateReports(directReport);
+            }
+        }
+        return totalReports;
+    }
+
 }
