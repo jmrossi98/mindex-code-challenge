@@ -17,6 +17,7 @@ public class ReportingStructureServiceImpl implements ReportingStructureService 
     @Autowired
     private EmployeeRepository employeeRepository;
 
+    @Override
     public ReportingStructure getReportingStructure(String employeeId){
         Employee employee = employeeRepository.findByEmployeeId(employeeId);
         int numberOfReports = calculateReports(employee);
@@ -28,9 +29,12 @@ public class ReportingStructureServiceImpl implements ReportingStructureService 
             return 0;
         }
 
-        int totalReports = 0;
-        for (Employee report : employee.getDirectReports()) {
-            totalReports += 1 + calculateReports(report);
+        int totalReports = employee.getDirectReports().size();
+        for (Employee report : employee.getDirectReports()){
+            Employee directReport = employeeRepository.findByEmployeeId(report.getEmployeeId());
+            if (directReport != null){
+                totalReports += calculateReports(directReport);
+            }
         }
         return totalReports;
     }
